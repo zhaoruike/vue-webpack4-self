@@ -10,50 +10,50 @@ let entries = function () {
     let jsDir = path.resolve(__dirname, 'src/entry')
     let entryFiles = glob.sync(jsDir + '/*.{js,jsx}')
     let src = {
-      map: {},
-      plugins: [
-        // new CleanWebpackPlugin(['dist/*']),
-        new VueLoaderPlugin(),
-        new MiniCssExtractPlugin({filename:"css/[name][hash].css"}),
-        new webpack.NamedModulesPlugin(),
-        new webpack.HotModuleReplacementPlugin(),
-      ]
+        map: {},
+        plugins: [
+            // new CleanWebpackPlugin(['dist/*']),
+            new VueLoaderPlugin(),
+            new MiniCssExtractPlugin({ filename: "css/[name][hash].css" }),
+            new webpack.NamedModulesPlugin(),
+            new webpack.HotModuleReplacementPlugin(),
+        ]
     };
     for (let i = 0; i < entryFiles.length; i++) {
-      let filePath = entryFiles[i];
-      let filename = filePath.substring(filePath.lastIndexOf('\/') + 1, filePath.lastIndexOf('.'));
-      src.map[filename] = ["webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000&reload=true",filePath];
-      src.plugins.push(
-        new HTMlWebpackPlugin({
-          title: 'My App',
-          filename: filename + '.html',
-          template: 'index.html',
-          inject: true,
-          chunks: [filename,"commons"],
-          cache: false,
-          hash: false,
-          minify: {
-            removeComments: false,
-            collapseWhitespace: false
-          },
-          showErrors: false
-        })
-      )
-  
+        let filePath = entryFiles[i];
+        let filename = filePath.substring(filePath.lastIndexOf('\/') + 1, filePath.lastIndexOf('.'));
+        src.map[filename] = ["webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000&reload=true", filePath];
+        src.plugins.push(
+            new HTMlWebpackPlugin({
+                title: 'My App',
+                filename: filename + '.html',
+                template: 'index.html',
+                inject: true,
+                chunks: [filename, "commons"],
+                cache: false,
+                hash: false,
+                minify: {
+                    removeComments: false,
+                    collapseWhitespace: false
+                },
+                showErrors: false
+            })
+        )
+
     }
     return src;
-  };
+};
 module.exports = {
     // entry: {
     //     app: './src/app.js',
     // },
     // entry:["webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000&reload=true",'./src/app.js'],
-    entry:entries().map,
+    entry: entries().map,
     output: {
         //生成路径
         path: path.resolve(__dirname, 'dist'),
         //内存路径
-        publicPath:"/dist/",
+        publicPath: "/dist/",
         filename: 'js/[name][hash].js'
     },
     resolve: {
@@ -76,7 +76,7 @@ module.exports = {
                 loader: 'babel-loader',
                 query: {
                     presets: ['es2015'],
-                    plugins:['transform-runtime']
+                    plugins: ['transform-runtime']
                 }
             },
             {
@@ -93,6 +93,22 @@ module.exports = {
                     limit: 1,
                     name: 'img/[name][hash].[ext]'
                 }
+            },
+            {
+                test: /\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/,
+                loader: 'url-loader',
+                options: {
+                    limit: 10000,
+                    name: 'media/[name].[hash:7].[ext]'
+                }
+            },
+            {
+                test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
+                loader: 'url-loader',
+                options: {
+                    limit: 10000,
+                    name: 'fonts/[name].[hash:7].[ext]'
+                }
             }
         ]
     },
@@ -107,12 +123,12 @@ module.exports = {
     //     new webpack.NamedModulesPlugin(),
     //     new webpack.HotModuleReplacementPlugin(),
     // ],
-    plugins:entries().plugins,
+    plugins: entries().plugins,
     devServer: {
-        contentBase: path.join(__dirname, "dist"), 
-        port: 9000, 
-        open:true,
-        inline:true,
-        hot:true 
-      }
+        contentBase: path.join(__dirname, "dist"),
+        port: 9000,
+        open: true,
+        inline: true,
+        hot: true
+    }
 }
