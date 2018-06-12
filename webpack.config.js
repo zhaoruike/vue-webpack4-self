@@ -29,7 +29,7 @@ let entries = function () {
                 filename: filename + '.html',
                 template: 'index.html',
                 inject: true,
-                chunks: [filename, "commons"],
+                chunks: [filename, "vendor",'commons'],
                 cache: false,
                 hash: false,
                 minify: {
@@ -124,6 +124,19 @@ module.exports = {
     //     new webpack.HotModuleReplacementPlugin(),
     // ],
     plugins: entries().plugins,
+    optimization:{
+        splitChunks: {    
+          cacheGroups: {      
+            vendor: {    
+              test: /node_modules/,    
+              chunks: 'initial',    
+              name: 'vendor',   
+              priority: 10,    
+              enforce: true    
+            }   
+          }   
+        },
+      },
     devServer: {
         contentBase: path.join(__dirname, "dist"),
         port: 9000,
