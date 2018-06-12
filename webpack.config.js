@@ -10,12 +10,12 @@ module.exports = {
     // entry: {
     //     app: './src/app.js',
     // },
-    entry:["webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000&reload=true",'./src/app.js'],
+    entry: ["webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000&reload=true", './src/app.js'],
     output: {
         //生成路径
         path: path.resolve(__dirname, 'dist'),
         //内存路径
-        publicPath:"/dist/",
+        publicPath: "/dist/",
         filename: 'js/[name][hash].js'
     },
     resolve: {
@@ -38,7 +38,7 @@ module.exports = {
                 loader: 'babel-loader',
                 query: {
                     presets: ['es2015'],
-                    plugins:['transform-runtime']
+                    plugins: ['transform-runtime']
                 }
             },
             {
@@ -55,25 +55,41 @@ module.exports = {
                     limit: 1,
                     name: 'img/[name][hash].[ext]'
                 }
+            },
+            {
+                test: /\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/,
+                loader: 'url-loader',
+                options: {
+                    limit: 10000,
+                    name: utils.assetsPath('media/[name].[hash:7].[ext]')
+                }
+            },
+            {
+                test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
+                loader: 'url-loader',
+                options: {
+                    limit: 10000,
+                    name: utils.assetsPath('fonts/[name].[hash:7].[ext]')
+                }
             }
         ]
     },
-    plugins: [ 
+    plugins: [
         // new CleanWebpackPlugin(['prod/*']),
         new VueLoaderPlugin(),
         new MiniCssExtractPlugin({ filename: 'css/style[hash].css' }),
         new HTMlWebpackPlugin({
-            filename:'index.html',
-            template:'index.html'
+            filename: 'index.html',
+            template: 'index.html'
         }),
         new webpack.NamedModulesPlugin(),
         new webpack.HotModuleReplacementPlugin(),
     ],
     devServer: {
-        contentBase: path.join(__dirname, "prod"), 
-        port: 9000, 
-        open:true,
-        inline:true,
-        hot:true 
-      }
+        contentBase: path.join(__dirname, "prod"),
+        port: 9000,
+        open: true,
+        inline: true,
+        hot: true
+    }
 }
